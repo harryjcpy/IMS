@@ -1,6 +1,7 @@
 package com.ims.service.impl;
 
 import com.ims.entity.Result;
+import com.ims.exception.ResourceNotFoundException;
 import com.ims.repository.ResultRepository;
 import com.ims.service.ResultService;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class ResultServiceImpl implements ResultService {
     @Override
     public Result getResultById(Long id) {
         return resultRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Result not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Result not found with id: " + id));
     }
 
     @Override

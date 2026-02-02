@@ -23,6 +23,7 @@ public class Student extends BaseEntity {
 	@OneToOne
 	@JoinColumn(name = "user_id", nullable = false)
 	private User myUser;
+	
 	@Column(name = "roll_no", unique = true, length = 50)
 	private String rollNo;
 	@Column(name = "admission_date")

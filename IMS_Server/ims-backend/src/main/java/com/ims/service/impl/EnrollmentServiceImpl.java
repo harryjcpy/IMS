@@ -1,6 +1,7 @@
 package com.ims.service.impl;
 
 import com.ims.entity.Enrollment;
+import com.ims.exception.ResourceNotFoundException;
 import com.ims.repository.EnrollmentRepository;
 import com.ims.service.EnrollmentService;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     @Override
     public Enrollment getEnrollmentById(Long id) {
         return enrollmentRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Enrollment not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Enrollment not found with id: " + id));
     }
 
     @Override
