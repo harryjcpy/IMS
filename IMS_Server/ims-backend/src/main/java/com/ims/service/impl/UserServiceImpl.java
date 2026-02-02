@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ims.dto.RegisterRequest;
 import com.ims.entity.User;
+import com.ims.exception.ResourceNotFoundException;
 import com.ims.repository.UserRepository;
 import com.ims.service.UserService;
 
@@ -33,7 +34,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User findByEmail(String email) {
 		return userRepo.findByEmail(email)
-				.orElseThrow(() -> new RuntimeException("User not found"));
+				.orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + email));
 	}
 
 	@Override
@@ -44,13 +45,13 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User getUserById(Long id) {
 		return userRepo.findById(id)
-				.orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+				.orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
 	}
 
 	@Override
 	public void deleteUser(Long id) {
 		if (!userRepo.existsById(id)) {
-			throw new RuntimeException("User not found with id: " + id);
+			throw new ResourceNotFoundException("User not found with id: " + id);
 		}
 		userRepo.deleteById(id);
 	}

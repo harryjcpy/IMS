@@ -1,6 +1,7 @@
 package com.ims.service.impl;
 
 import com.ims.entity.Teacher;
+import com.ims.exception.ResourceNotFoundException;
 import com.ims.repository.TeacherRepository;
 import com.ims.service.TeacherService;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public Teacher getTeacherById(Long id) {
         return teacherRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Teacher not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Teacher not found with id: " + id));
     }
 
     @Override

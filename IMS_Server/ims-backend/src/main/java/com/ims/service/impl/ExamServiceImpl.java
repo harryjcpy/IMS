@@ -1,6 +1,7 @@
 package com.ims.service.impl;
 
 import com.ims.entity.Exam;
+import com.ims.exception.ResourceNotFoundException;
 import com.ims.repository.ExamRepository;
 import com.ims.service.ExamService;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class ExamServiceImpl implements ExamService {
     @Override
     public Exam getExamById(Long id) {
         return examRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Exam not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Exam not found with id: " + id));
     }
 
     @Override

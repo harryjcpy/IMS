@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ims.entity.Student;
+import com.ims.exception.ResourceNotFoundException;
 import com.ims.repository.StudentRepository;
 import com.ims.service.StudentService;
 
@@ -13,7 +14,7 @@ import com.ims.service.StudentService;
 @Transactional
 public class StudentServiceImpl implements StudentService {
 	private final StudentRepository studentRepo;
-	
+
 	public StudentServiceImpl(StudentRepository studentRepo) {
 		this.studentRepo = studentRepo;
 	}
@@ -30,12 +31,13 @@ public class StudentServiceImpl implements StudentService {
 
 	@Override
 	public Student getStudentById(Long id) {
-		return studentRepo.findById(id).orElseThrow(() -> new RuntimeException("Student not found with id: " + id));
+		return studentRepo.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Student not found with id: " + id));
 	}
 
 	@Override
 	public void deleteStudent(Long id) {
-		studentRepo.deleteById(id);		
+		studentRepo.deleteById(id);
 	}
-	
+
 }

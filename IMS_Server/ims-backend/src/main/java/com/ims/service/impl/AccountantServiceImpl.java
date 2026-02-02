@@ -1,6 +1,7 @@
 package com.ims.service.impl;
 
 import com.ims.entity.Accountant;
+import com.ims.exception.ResourceNotFoundException;
 import com.ims.repository.AccountantRepository;
 import com.ims.service.AccountantService;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class AccountantServiceImpl implements AccountantService {
     @Override
     public Accountant getAccountantById(Long id) {
         return accountantRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Accountant not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Accountant not found with id: " + id));
     }
 
     @Override

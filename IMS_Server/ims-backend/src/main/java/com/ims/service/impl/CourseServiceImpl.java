@@ -1,6 +1,7 @@
 package com.ims.service.impl;
 
 import com.ims.entity.Course;
+import com.ims.exception.ResourceNotFoundException;
 import com.ims.repository.CourseRepository;
 import com.ims.service.CourseService;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public Course getCourseById(Long id) {
         return courseRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Course not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Course not found with id: " + id));
     }
 
     @Override
