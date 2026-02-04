@@ -2,6 +2,7 @@ package com.ims.service.impl;
 
 import java.util.List;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,9 +17,11 @@ import com.ims.service.UserService;
 public class UserServiceImpl implements UserService {
 
 	private final UserRepository userRepo;
+	private final PasswordEncoder passwordEncoder;
 
-	public UserServiceImpl(UserRepository userRepo) {
+	public UserServiceImpl(UserRepository userRepo, PasswordEncoder passwordEncoder) {
 		this.userRepo = userRepo;
+		this.passwordEncoder = passwordEncoder;
 	}
 
 	@Override
@@ -26,7 +29,7 @@ public class UserServiceImpl implements UserService {
 		User user = new User();
 		user.setName(request.getName());
 		user.setEmail(request.getEmail());
-		user.setPassword(request.getPassword());
+		user.setPassword(passwordEncoder.encode(request.getPassword())); // Hash password
 		user.setRole(request.getRole());
 		return userRepo.save(user);
 	}
@@ -62,7 +65,7 @@ public class UserServiceImpl implements UserService {
 		user.setName(request.getName());
 		user.setEmail(request.getEmail());
 		if (request.getPassword() != null && !request.getPassword().isEmpty()) {
-			user.setPassword(request.getPassword());
+			user.setPassword(passwordEncoder.encode(request.getPassword())); // Hash password
 		}
 		user.setRole(request.getRole());
 		return userRepo.save(user);
