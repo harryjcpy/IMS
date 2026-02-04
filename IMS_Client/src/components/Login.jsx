@@ -7,7 +7,6 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Login Attempt:', { email, password });
     // Future integration with backend authentication will go here
   };
 

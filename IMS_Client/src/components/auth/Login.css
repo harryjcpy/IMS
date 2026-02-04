@@ -1,0 +1,31 @@
+.login-container {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.login-container .card {
+    border-radius: 15px;
+    border: none;
+}
+
+.login-container h2 {
+    color: #333;
+    font-weight: 600;
+}
+
+.login-container .btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    padding: 12px;
+    font-weight: 500;
+    transition: transform 0.2s;
+}
+
+.login-container .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.login-container .form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
