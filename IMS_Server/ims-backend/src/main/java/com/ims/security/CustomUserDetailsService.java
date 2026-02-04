@@ -14,21 +14,28 @@ import java.util.Collections;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    @Autowired
-    private UserRepository userRepository;
+        @Autowired
+        private UserRepository userRepository;
 
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        // Find user by email
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+        @Override
+        public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+                // Find user by email
+                User user = userRepository.findByEmail(email)
+                                .orElseThrow(() -> new UsernameNotFoundException(
+                                                "User not found with email: " + email));
 
-        // Convert User entity to Spring Security UserDetails
-        return org.springframework.security.core.userdetails.User.builder()
-                .username(user.getEmail())
-                .password(user.getPassword())
-                .authorities(Collections.singletonList(
-                        new SimpleGrantedAuthority("ROLE_" + user.getRole().name())))
-                .build();
-    }
+                // DEBUG: Log the stored password hash
+                System.out.println("=== USER DETAILS SERVICE ===");
+                System.out.println("Email: " + user.getEmail());
+                System.out.println("Stored password hash: " + user.getPassword());
+                System.out.println("Role: " + user.getRole());
+
+                // Convert User entity to Spring Security UserDetails
+                return org.springframework.security.core.userdetails.User.builder()
+                                .username(user.getEmail())
+                                .password(user.getPassword())
+                                .authorities(Collections.singletonList(
+                                                new SimpleGrantedAuthority("ROLE_" + user.getRole().name())))
+                                .build();
+        }
 }

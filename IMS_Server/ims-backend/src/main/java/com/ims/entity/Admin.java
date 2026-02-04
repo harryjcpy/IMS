@@ -16,10 +16,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "accountants")
-@AttributeOverride(name = "id", column = @Column(name = "accountant_id"))
-public class Accountant extends BaseEntity {
-	@OneToOne
-	@JoinColumn(name = "user_id", nullable = false)
-	private User myUser;
+@Table(name = "admins")
+@AttributeOverride(name = "id", column = @Column(name = "admin_id"))
+public class Admin extends BaseEntity {
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User myUser;
 }

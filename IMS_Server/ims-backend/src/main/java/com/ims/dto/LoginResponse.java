@@ -12,13 +12,15 @@ import lombok.Setter;
 public class LoginResponse {
 	private String token;
 	private String type = "Bearer";
+	private Long id;
 	private String email;
 	private String name;
 	private String role;
 
-	public LoginResponse(String token, String email, String name, String role) {
+	public LoginResponse(String token, Long id, String email, String name, String role) {
 		this.token = token;
 		this.type = "Bearer";
+		this.id = id;
 		this.email = email;
 		this.name = name;
 		this.role = role;

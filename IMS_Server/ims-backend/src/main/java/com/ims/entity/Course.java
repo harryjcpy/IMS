@@ -3,6 +3,8 @@ package com.ims.entity;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,4 +24,8 @@ public class Course extends BaseEntity {
 	@Column(name = "duration_in_months")
 	private int durationInMonths;
 	private double fee;
+
+	@ManyToOne
+	@JoinColumn(name = "assigned_teacher_id")
+	private Teacher assignedTeacher;
 }

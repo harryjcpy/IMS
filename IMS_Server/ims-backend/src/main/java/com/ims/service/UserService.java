@@ -1,5 +1,6 @@
 package com.ims.service;
 
+import com.ims.dto.ChangePasswordRequest;
 import com.ims.dto.RegisterRequest;
 import com.ims.entity.User;
 
@@ -17,4 +18,6 @@ public interface UserService {
 	void deleteUser(Long id);
 
 	User updateUser(Long id, RegisterRequest request);
+
+	void changePassword(Long userId, ChangePasswordRequest request);
 }

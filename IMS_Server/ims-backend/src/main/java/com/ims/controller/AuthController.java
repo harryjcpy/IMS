@@ -42,6 +42,13 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         try {
+            // DEBUG: Log the incoming request
+            System.out.println("=== LOGIN ATTEMPT ===");
+            System.out.println("Email: " + loginRequest.getEmail());
+            System.out.println("Password length: "
+                    + (loginRequest.getPassword() != null ? loginRequest.getPassword().length() : "null"));
+            System.out.println("Password: " + loginRequest.getPassword());
+
             // Authenticate user
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -61,6 +68,7 @@ public class AuthController {
             // Create response
             LoginResponse response = new LoginResponse(
                     token,
+                    user.getId(),
                     user.getEmail(),
                     user.getName(),
                     user.getRole().name());
