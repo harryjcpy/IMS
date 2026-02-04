@@ -3,8 +3,10 @@ package com.ims.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,6 +16,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Configuration
 @EnableWebSecurity
@@ -29,84 +38,58 @@ public class SecurityConfig {
     @Autowired
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
-    /**
-     * Configure security filter chain
-     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // Enable CORS
-                .cors(cors -> cors.configure(http))
-
-                // Disable CSRF (not needed for stateless JWT authentication)
+                .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
-
-                // Configure authorization rules
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .authorizeHttpRequests(auth -> auth
-                        // Public endpoints (no authentication required)
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/test/**").permitAll()
                         .requestMatchers("/error").permitAll()
-
-                        // All other endpoints require authentication
                         .anyRequest().authenticated())
-
-                // Configure exception handling
-                .exceptionHandling(exception -> exception
-                        .authenticationEntryPoint(jwtAuthenticationEntryPoint))
-
-                // Set session management to stateless
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-
-                // Set authentication provider
                 .authenticationProvider(authenticationProvider())
-
-                // Add JWT filter before UsernamePasswordAuthenticationFilter
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
-    /**
-     * Configure CORS to allow requests from frontend
-     */
     @Bean
-    public org.springframework.web.cors.CorsConfigurationSource corsConfigurationSource() {
-        org.springframework.web.cors.CorsConfiguration configuration = new org.springframework.web.cors.CorsConfiguration();
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
 
-        // Get allowed origins from environment variable or use defaults
-        String allowedOrigins = System.getenv("ALLOWED_ORIGINS");
-        if (allowedOrigins != null && !allowedOrigins.isEmpty()) {
-            configuration.setAllowedOrigins(java.util.Arrays.asList(allowedOrigins.split(",")));
+        String allowedOriginsEnv = System.getenv("ALLOWED_ORIGINS");
+        if (allowedOriginsEnv != null && !allowedOriginsEnv.isEmpty()) {
+            configuration.setAllowedOrigins(Stream.of(allowedOriginsEnv.split(","))
+                    .map(String::trim)
+                    .collect(Collectors.toList()));
         } else {
-            configuration.setAllowedOrigins(java.util.Arrays.asList(
+            configuration.setAllowedOrigins(Arrays.asList(
                     "http://localhost:5173",
                     "http://localhost:3000",
                     "https://ims-production-6843.up.railway.app",
                     "https://ourims.netlify.app"));
         }
 
-        configuration.setAllowedMethods(java.util.Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(java.util.Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setExposedHeaders(Arrays.asList("Authorization"));
         configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L);
 
-        org.springframework.web.cors.UrlBasedCorsConfigurationSource source = new org.springframework.web.cors.UrlBasedCorsConfigurationSource();
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 
-    /**
-     * Configure password encoder (BCrypt)
-     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    /**
-     * Configure authentication provider
-     */
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -115,9 +98,6 @@ public class SecurityConfig {
         return authProvider;
     }
 
-    /**
-     * Configure authentication manager
-     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
