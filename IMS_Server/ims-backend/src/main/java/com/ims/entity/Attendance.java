@@ -23,10 +23,14 @@ public class Attendance extends BaseEntity {
 	@JoinColumn(name = "student_id")
 	private Student myStudent;
 
+	@ManyToOne
 	@JoinColumn(name = "course_id")
 	private Course myCourse;
 
 	private String status;
+
+	@Column(name = "attendance_date")
+	private String attendanceDate;
 
 	@ManyToOne
 	@JoinColumn(name = "teacher_id")

@@ -14,12 +14,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor  
+@AllArgsConstructor
 @Entity
 @Table(name = "accountants")
 @AttributeOverride(name = "id", column = @Column(name = "accountant_id"))
 public class Accountant extends BaseEntity {
 	@OneToOne
-	@JoinColumn(name = "user_id")
+	@JoinColumn(name = "user_id", nullable = false)
 	private User myUser;
 }

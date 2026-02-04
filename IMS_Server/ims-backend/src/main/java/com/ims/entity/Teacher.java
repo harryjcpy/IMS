@@ -20,7 +20,7 @@ import lombok.Setter;
 @AttributeOverride(name = "id", column = @Column(name = "teacher_id"))
 public class Teacher extends BaseEntity {
 	@OneToOne
-	@JoinColumn(name = "user_id")
+	@JoinColumn(name = "user_id", nullable = false)
 	private User myUser;
 	private String qualification;
 	@Column(name = "exp_in_years")

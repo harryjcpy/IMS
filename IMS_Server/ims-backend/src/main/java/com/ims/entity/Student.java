@@ -20,10 +20,10 @@ import lombok.Setter;
 @Table(name = "students")
 @AttributeOverride(name = "id", column = @Column(name = "student_id"))
 public class Student extends BaseEntity {
-	@OneToOne
+	@OneToOne(fetch = jakarta.persistence.FetchType.EAGER)
 	@JoinColumn(name = "user_id", nullable = false)
 	private User myUser;
-	
+
 	@Column(name = "roll_no", unique = true, length = 50)
 	private String rollNo;
 	@Column(name = "admission_date")

@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ims.dto.ChangePasswordRequest;
 import com.ims.dto.RegisterRequest;
 import com.ims.entity.User;
 import com.ims.exception.ResourceNotFoundException;
@@ -69,6 +70,20 @@ public class UserServiceImpl implements UserService {
 		}
 		user.setRole(request.getRole());
 		return userRepo.save(user);
+	}
+
+	@Override
+	public void changePassword(Long userId, ChangePasswordRequest request) {
+		User user = getUserById(userId);
+
+		// Validate old password
+		if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+			throw new IllegalArgumentException("Old password is incorrect");
+		}
+
+		// Set new password
+		user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+		userRepo.save(user);
 	}
 
 }
