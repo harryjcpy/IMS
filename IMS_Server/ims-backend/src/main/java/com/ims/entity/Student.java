@@ -28,4 +28,12 @@ public class Student extends BaseEntity {
 	private String rollNo;
 	@Column(name = "admission_date")
 	private LocalDate admissionDate;
+
+	public User getMyUser() {
+		return myUser;
+	}
+
+	public void setMyUser(User myUser) {
+		this.myUser = myUser;
+	}
 }

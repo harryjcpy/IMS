@@ -32,8 +32,6 @@ public class StudentController {
         for (Student s : students) {
             System.out.println("Student ID: " + s.getId());
             System.out.println("Roll No: " + s.getRollNo());
-            System.out.println("User: " + (s.getMyUser() != null ? s.getMyUser().getName() : "NULL"));
-            System.out.println("User Email: " + (s.getMyUser() != null ? s.getMyUser().getEmail() : "NULL"));
         }
         return students;
     }
