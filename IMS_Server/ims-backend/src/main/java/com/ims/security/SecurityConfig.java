@@ -49,6 +49,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/test/**").permitAll()
+                        .requestMatchers("/api/health/**").permitAll()
                         .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider())
@@ -71,7 +72,8 @@ public class SecurityConfig {
                     "http://localhost:5173",
                     "http://localhost:3000",
                     "https://ims-production-6843.up.railway.app",
-                    "https://ourims.netlify.app"));
+                    "https://ourims.netlify.app",
+                    "https://ourims.netlify.app/"));
         }
 
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
