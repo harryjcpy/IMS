@@ -83,7 +83,8 @@ public class SecurityConfig {
             configuration.setAllowedOrigins(java.util.Arrays.asList(
                     "http://localhost:5173",
                     "http://localhost:3000",
-                    "https://ims-production-6843.up.railway.app"));
+                    "https://ims-production-6843.up.railway.app",
+                    "https://ourims.netlify.app"));
         }
 
         configuration.setAllowedMethods(java.util.Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
