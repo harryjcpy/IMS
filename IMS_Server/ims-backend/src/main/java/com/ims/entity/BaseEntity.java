@@ -23,11 +23,11 @@ public class BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@CreationTimestamp
-	@Column(name="created_on")
+	@Column(name = "created_on")
 	private LocalDate createdOn;
 	@UpdateTimestamp
-	@Column(name="last_updated")
+	@Column(name = "last_updated")
 	private LocalDateTime updatedAt;
-	@Column(name = "active_status")
-	private boolean isActive = true;
+	@Column(name = "active_status", nullable = false)
+	private Boolean isActive = true;
 }

@@ -86,6 +86,6 @@ public class UserController {
                 user.getName(),
                 user.getEmail(),
                 user.getRole(),
-                user.isActive());
+                user.getIsActive());
     }
 }

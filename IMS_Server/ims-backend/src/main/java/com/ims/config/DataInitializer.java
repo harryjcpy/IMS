@@ -1,5 +1,7 @@
 package com.ims.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -12,11 +14,11 @@ import com.ims.repository.UserRepository;
 
 /**
  * Initializes the database with a default admin user on first startup.
- * This solves the "bootstrap problem" - creating the first admin who can then
- * create other users.
  */
 @Component
 public class DataInitializer implements CommandLineRunner {
+
+    private static final Logger logger = LoggerFactory.getLogger(DataInitializer.class);
 
     private final UserRepository userRepository;
     private final AdminRepository adminRepository;
@@ -32,29 +34,31 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // Check if admin already exists
-        if (!userRepository.existsByEmail("admin@ims.com")) {
-            // Create default admin user
-            User adminUser = new User();
-            adminUser.setName("Super Admin");
-            adminUser.setEmail("admin@ims.com");
-            adminUser.setPassword(passwordEncoder.encode("admin123"));
-            adminUser.setRole(Role.ADMIN);
-            adminUser.setActive(true);
+        try {
+            logger.info("🚀 Checking for default admin user...");
+            if (!userRepository.existsByEmail("admin@ims.com")) {
+                logger.info("📝 Creating default admin user (admin@ims.com / admin123)...");
 
-            User savedUser = userRepository.save(adminUser);
+                User adminUser = new User();
+                adminUser.setName("Super Admin");
+                adminUser.setEmail("admin@ims.com");
+                adminUser.setPassword(passwordEncoder.encode("admin123"));
+                adminUser.setRole(Role.ADMIN);
+                adminUser.setIsActive(true);
 
-            // Create admin entity
-            Admin admin = new Admin();
-            admin.setMyUser(savedUser);
-            adminRepository.save(admin);
+                User savedUser = userRepository.save(adminUser);
 
-            System.out.println("========================================");
-            System.out.println("✅ Default admin user created!");
-            System.out.println("📧 Email: admin@ims.com");
-            System.out.println("🔑 Password: admin123");
-            System.out.println("⚠️  Please change password after first login!");
-            System.out.println("========================================");
+                Admin adminEntity = new Admin();
+                adminEntity.setMyUser(savedUser);
+                adminEntity.setIsActive(true);
+                adminRepository.save(adminEntity);
+
+                logger.info("✅ Default admin user created successfully!");
+            } else {
+                logger.debug("ℹ️ Admin user already exists. Skipping initialization.");
+            }
+        } catch (Exception e) {
+            logger.error("❌ ERROR during Data Initialization: {}", e.getMessage(), e);
         }
     }
 }
