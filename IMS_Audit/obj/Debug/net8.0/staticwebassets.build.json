@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "TwxDMu76IbArkoghKc8Ja7d+Wj1zX07YxTHkPW0/AKs=",
+  "Source": "IMS_Audit",
+  "BasePath": "_content/IMS_Audit",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
